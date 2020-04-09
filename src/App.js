@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Link, NavLink, Switch, Redirect, withRouter } from 'react-router-dom';
 import { Button, Switch as SwitchAntd } from 'antd';
+import BasicLayout from './pages/BasicLayout';
 import './App.scss';
 
 const Home = (props) => {
@@ -30,15 +31,15 @@ const NoMatch = () => (
 function App() {
   return (
     <Router>
-      
-      <Link to='/'>首页</Link>
+      <BasicLayout/>
+      {/* <Link to='/'>首页</Link>
       <Link to='/about'>关于</Link>
       <NavLink activeClassName='active' to='/about'>关于变红</NavLink>
       <Switch>
         <Route exact path='/' component={Home}/>
         <Route exact path='/about' component={About}/>
         <Route component={NoMatch}/>
-      </Switch>
+      </Switch> */}
 
     </Router>
   );
