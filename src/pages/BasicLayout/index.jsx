@@ -7,14 +7,59 @@ import {
   TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-
-import styles from './BasicLayout.module.scss';
+import styled from 'styled-components';
 
 import logo from '../../assets/logo.svg'
 
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
+
+const LayoutExt = styled(Layout)`
+  height: 100vh;
+`;
+
+const HeaderExt = styled(Header)`
+  background-color: #fff;
+`;
+
+const ContentExt = styled(Content)`
+  padding: 0 16px;
+`;
+
+const SiderContent = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+const SiderLogo = styled.div`
+  text-align: center;
+`;
+const SiderMenu = styled.div`
+  flex: 1;
+  overflow: auto;
+  scrollbar-width: none; /* firefox */
+  &::-webkit-scrollbar {
+    display: none; /* Chrome Safari */
+  }
+`;
+
+const BreadContent = styled.div`
+  height: 56px;
+  display: flex;
+  align-items: center;
+`;
+
+const Main = styled.section`
+  height: calc( 100% - 56px );
+  background-color: #fff;
+  border-radius: 4px;
+  overflow: auto;
+  scrollbar-width: none; /* firefox */
+  &::-webkit-scrollbar {
+    display: none; /* Chrome Safari */
+  }
+`;
 
 class BasicLayout extends React.Component {
   state = {
@@ -28,13 +73,13 @@ class BasicLayout extends React.Component {
 
   render() {
     return (
-      <Layout className={styles.layout}>
+      <LayoutExt>
         <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
-          <div className={styles.sider}>
-            <div className={styles.logo} >
-              <img alt='logo' src={logo} className={styles.logoImg} />
-            </div>
-            <div className={styles.menu}>
+          <SiderContent>
+            <SiderLogo >
+              <img alt='logo' src={logo}  />
+            </SiderLogo>
+            <SiderMenu>
               <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
                 <Menu.Item key="1">
                   <PieChartOutlined />
@@ -73,23 +118,25 @@ class BasicLayout extends React.Component {
                   <FileOutlined />
                 </Menu.Item>
               </Menu>
-            </div>
-          </div>
+            </SiderMenu>
+          </SiderContent>
         </Sider>
-        <Layout className="site-layout">
-          <Header className="site-layout-background" style={{ padding: 0 }} />
-          <Content style={{ margin: '0 16px' }}>
-            <Breadcrumb style={{ margin: '16px 0' }}>
-              <Breadcrumb.Item>User</Breadcrumb.Item>
-              <Breadcrumb.Item>Bill</Breadcrumb.Item>
-            </Breadcrumb>
-            <div  className={styles.hbx} style={{ padding: 24, minHeight: 360 }}>
+        <Layout>
+          <HeaderExt/>
+          <ContentExt>
+            <BreadContent>
+              <Breadcrumb>
+                <Breadcrumb.Item>User</Breadcrumb.Item>
+                <Breadcrumb.Item>Bill</Breadcrumb.Item>
+              </Breadcrumb>
+            </BreadContent>
+            <Main>
               Bill is a cat.
-            </div>
-          </Content>
+            </Main>
+          </ContentExt>
           <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
         </Layout>
-      </Layout>
+      </LayoutExt>
     );
   }
 }
