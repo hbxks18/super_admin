@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layout, Menu, Breadcrumb } from 'antd';
+import { Layout, Menu, Breadcrumb, Result, Button } from 'antd';
 import {
   DesktopOutlined,
   PieChartOutlined,
@@ -8,6 +8,10 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import styled from 'styled-components';
+import { BrowserRouter as Router, Route, Link, NavLink, Switch, Redirect, withRouter } from 'react-router-dom';
+
+import NoFound from '../NoFound';
+import NoPower from '../NoPower';
 
 import logo from '../../assets/logo.svg'
 
@@ -60,6 +64,8 @@ const Main = styled.section`
     display: none; /* Chrome Safari */
   }
 `;
+
+const Home = () => <h1>我是首页</h1>
 
 class BasicLayout extends React.Component {
   state = {
@@ -131,7 +137,11 @@ class BasicLayout extends React.Component {
               </Breadcrumb>
             </BreadContent>
             <Main>
-              Bill is a cat.
+              <Switch>
+                <Route exact path='/' component={Home}/>
+                <Route exact path='/NoPower' component={NoPower}/>
+                <Route component={NoFound}/>
+              </Switch>
             </Main>
           </ContentExt>
           <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
