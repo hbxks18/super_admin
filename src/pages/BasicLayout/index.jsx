@@ -12,6 +12,7 @@ import { BrowserRouter as Router, Route, Link, NavLink, Switch, Redirect, withRo
 
 import NoFound from '../NoFound';
 import NoPower from '../NoPower';
+import Home from '../Home';
 
 import logo from '../../assets/logo.svg'
 
@@ -65,7 +66,6 @@ const Main = styled.section`
   }
 `;
 
-const Home = () => <h1>我是首页</h1>
 
 class BasicLayout extends React.Component {
   state = {
