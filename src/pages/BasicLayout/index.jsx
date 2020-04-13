@@ -1,14 +1,9 @@
 import React from 'react';
 import { Layout, Menu, Breadcrumb, Result, Button } from 'antd';
-import {
-  DesktopOutlined,
-  PieChartOutlined,
-  FileOutlined,
-  TeamOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
 import styled from 'styled-components';
 import { BrowserRouter as Router, Route, Link, NavLink, Switch, Redirect, withRouter } from 'react-router-dom';
+
+import { createMenu, config } from '../../router';
 
 import NoFound from '../NoFound';
 import NoPower from '../NoPower';
@@ -70,14 +65,41 @@ const Main = styled.section`
 class BasicLayout extends React.Component {
   state = {
     collapsed: false,
+    selectedKeys: [],
+    defaultOpenKeys: [],
   };
 
+  componentWillMount() {
+    this.initSelectKeys();
+  }
+  /**
+   * 根据页面路径，进行自动匹配
+   *
+   * @memberof BasicLayout
+   */
+  initSelectKeys = () => {
+    const { location: { pathname } } = this.props;
+    console.log(pathname.split('/').slice(1, -1))
+    this.setState({
+      selectedKeys: pathname.split('/').slice(1),
+      defaultOpenKeys: pathname.split('/').slice(1, -1),
+    });
+  }
+
   onCollapse = collapsed => {
-    console.log(collapsed);
     this.setState({ collapsed });
   };
 
+  onClickMenuItem = ({ item, key, keyPath, domEvent }) => {
+    const { history } = this.props;
+    history.push(`/${keyPath.reverse().join('/')}`);
+    this.setState({
+      selectedKeys: keyPath,
+    });
+  }
+
   render() {
+    const { selectedKeys, defaultOpenKeys } = this.state;
     return (
       <LayoutExt>
         <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
@@ -86,43 +108,13 @@ class BasicLayout extends React.Component {
               <img alt='logo' src={logo}  />
             </SiderLogo>
             <SiderMenu>
-              <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-                <Menu.Item key="1">
-                  <PieChartOutlined />
-                  <span>Option 1</span>
-                </Menu.Item>
-                <Menu.Item key="2">
-                  <DesktopOutlined />
-                  <span>Option 2</span>
-                </Menu.Item>
-                <SubMenu
-                  key="sub1"
-                  title={
-                    <span>
-                      <UserOutlined />
-                      <span>User</span>
-                    </span>
-                  }
-                >
-                  <Menu.Item key="3">Tom</Menu.Item>
-                  <Menu.Item key="4">Bill</Menu.Item>
-                  <Menu.Item key="5">Alex</Menu.Item>
-                </SubMenu>
-                <SubMenu
-                  key="sub2"
-                  title={
-                    <span>
-                      <TeamOutlined />
-                      <span>Team</span>
-                    </span>
-                  }
-                >
-                  <Menu.Item key="6">Team 1</Menu.Item>
-                  <Menu.Item key="8">Team 2</Menu.Item>
-                </SubMenu>
-                <Menu.Item key="9">
-                  <FileOutlined />
-                </Menu.Item>
+              <Menu 
+                selectedKeys={selectedKeys}
+                defaultOpenKeys={defaultOpenKeys}
+                theme="dark" 
+                onClick={this.onClickMenuItem}
+                mode="inline">
+                {createMenu(config, [])}
               </Menu>
             </SiderMenu>
           </SiderContent>
@@ -139,6 +131,7 @@ class BasicLayout extends React.Component {
             <Main>
               <Switch>
                 <Route exact path='/' component={Home}/>
+                <Route exact path='/home' component={Home}/>
                 <Route exact path='/NoPower' component={NoPower}/>
                 <Route component={NoFound}/>
               </Switch>
@@ -151,4 +144,4 @@ class BasicLayout extends React.Component {
   }
 }
 
-export default BasicLayout;
+export default withRouter(BasicLayout);

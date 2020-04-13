@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   HomeOutlined,
+  MenuOutlined
 } from '@ant-design/icons';
 import { Menu } from 'antd';
 /**
@@ -16,19 +17,32 @@ import { Menu } from 'antd';
 
 const { SubMenu } = Menu;
 const { Item } = Menu;
-const config = [
+export const config = [
   {
     name: '首页',
     icon: <HomeOutlined />,
     auth: true,
-    path: '',
+    path: 'home',
   },
   {
-    name: '菜单一',
-    icon: <HomeOutlined />,
+    name: '菜单',
+    icon:<MenuOutlined />,
     auth: true,
-    path: '',
-    children: [],
+    path: 'menu',
+    children: [
+      {
+        name: '子菜单',
+        auth: true,
+        path: 'subMenu',
+        children: [
+          {
+            name: '子子菜单',
+            auth: true,
+            path: 'subsubMenu',
+          }
+        ],
+      }
+    ],
   },
 
 
@@ -37,6 +51,37 @@ const config = [
  * 创建菜单
  *
  */
-const createMenu = (auth) => {
-
+export const createMenu = (config = [], auth) => {
+  if (!config || !config.length) {
+    return [];
+  }
+  return config.map(m => {
+    // TODO: 权限逻辑的判断
+    if (m.hide) {
+      return null;
+    }
+    const isSubMenu = !!m.children?.length;
+    // const Icon = m.icon ? m.icon : null;
+    if (isSubMenu) {
+      return (
+      <SubMenu 
+        key={m.path || m.folderName}
+        title={
+          <span>
+            {m.icon ? m.icon : null}
+            <span>{m.name}</span>
+          </span>
+        }
+      >
+        {createMenu(m.children, auth)}
+      </SubMenu>);
+    }
+    return (
+    <Item
+      key={m.path || m.folderName}
+    >
+      {m.icon ? m.icon : null}
+      <span>{m.name}</span>
+    </Item>);
+  })
 }
