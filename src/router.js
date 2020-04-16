@@ -7,7 +7,7 @@ import { Menu, Spin, Result, Button, Typography } from 'antd';
 import { Route } from 'react-router-dom';
 import Loadable from 'react-loadable';
 
-import Loading from './components/Loading'
+import Loading from '@/components/Loading'
 /**
  * 路由相关配置
  * name: string 当前页面名称，在面包屑中的展示名称
@@ -94,8 +94,8 @@ const generateRoute = (config = [], path = '/', result = [], auth) => {
     // 如果children 存在，但是所有的子项的都是hide，也说明，存在页面
     if (!r.children || r.children.every(i => i.hide)) {
       const LoadableComponent = Loadable({
-        delay: 2000,
-        loader: () => import(`./pages/${r.key}`),
+        delay: 200,
+        loader: () => import(`@/pages/${r.key}`),
         loading: (props) => {
           if (props.error) {
             return (

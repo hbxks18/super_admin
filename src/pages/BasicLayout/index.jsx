@@ -68,6 +68,8 @@ class BasicLayout extends React.Component {
     defaultOpenKeys: [], // 仅打开当前选中项的菜单
   };
 
+   
+
   componentWillMount() {
     this.initSelectKeys();
   }
@@ -79,7 +81,7 @@ class BasicLayout extends React.Component {
   initSelectKeys = () => {
     const { location: { pathname } } = this.props;
     this.setState({
-      selectedKeys: pathname.split('/').slice(1),
+      // selectedKeys: pathname.split('/').slice(1),
       defaultOpenKeys: pathname.split('/').slice(1, -1),
     });
   }
@@ -91,13 +93,14 @@ class BasicLayout extends React.Component {
   onClickMenuItem = ({ item, key, keyPath, domEvent }) => {
     const { history } = this.props;
     history.push(`/${keyPath.reverse().join('/')}`);
-    this.setState({
-      selectedKeys: keyPath,
-    });
+    console.log('keyPath',keyPath)
   }
 
   render() {
-    const { selectedKeys, defaultOpenKeys } = this.state;
+    // TODO: 当前选中项是根据路由自动匹配，但是展开项只是只使用了默认项，没有受控
+    const { location: { pathname } } = this.props;
+    const selectedKeys = pathname.split('/').slice(1);
+    const { defaultOpenKeys } = this.state;
     return (
       <LayoutExt>
         <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
@@ -128,9 +131,8 @@ class BasicLayout extends React.Component {
             </BreadContent>
             <Main>
               <Switch>
+                <Route exact path='/' render={props => <Redirect to='/Home' />}/>
                 {createRoute(config, [])}
-                {/* <Route exact path='/' component={Home}/>
-                <Route exact path='/home' component={Home}/> */}
                 <Route exact path='/NoPower' component={NoPower}/>
                 <Route component={NoFound}/>
               </Switch>
