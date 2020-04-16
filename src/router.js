@@ -3,15 +3,19 @@ import {
   HomeOutlined,
   MenuOutlined
 } from '@ant-design/icons';
-import { Menu } from 'antd';
+import { Menu, Spin, Result, Button, Typography } from 'antd';
+import { Route } from 'react-router-dom';
+import Loadable from 'react-loadable';
+
+import Loading from './components/Loading'
 /**
  * 路由相关配置
  * name: string 当前页面名称，在面包屑中的展示名称
  * icon: reactDom 因为icon的可能是官方的也可能是自定义的，所以此处统一使用传组件的形式
  * auth: string|number|boolean 权限校验，此块内容待定
  * hide: boolean 是否在菜单栏展示该块内容
- * folderName: string 对应的pages文件夹的目录，默认使用该名称作为路由
- * path: string path会覆盖folderName
+ * key: string 对应的pages文件夹的目录，默认使用该名称作为路由
+ * path: string path会覆盖key
  * children: array 内容与上方配置一致
  */
 
@@ -22,25 +26,23 @@ export const config = [
     name: '首页',
     icon: <HomeOutlined />,
     auth: true,
-    path: 'home',
+    key: 'Home',
   },
   {
     name: '菜单',
     icon:<MenuOutlined />,
     auth: true,
-    path: 'menu',
+    key: 'Menu',
     children: [
       {
         name: '子菜单',
         auth: true,
-        path: 'subMenu',
-        children: [
-          {
-            name: '子子菜单',
-            auth: true,
-            path: 'subsubMenu',
-          }
-        ],
+        key: 'SubMenu',
+      },
+      {
+        name: '子菜单1',
+        auth: true,
+        key: 'SubMenu1',
       }
     ],
   },
@@ -62,10 +64,10 @@ export const createMenu = (config = [], auth) => {
     }
     const isSubMenu = !!m.children?.length;
     // const Icon = m.icon ? m.icon : null;
-    if (isSubMenu) {
+    if (isSubMenu && m.children.some(sub => !sub.hide)) {
       return (
       <SubMenu 
-        key={m.path || m.folderName}
+        key={m.path || m.key}
         title={
           <span>
             {m.icon ? m.icon : null}
@@ -78,10 +80,53 @@ export const createMenu = (config = [], auth) => {
     }
     return (
     <Item
-      key={m.path || m.folderName}
+      key={m.path || m.key}
     >
       {m.icon ? m.icon : null}
       <span>{m.name}</span>
     </Item>);
   })
+}
+
+const generateRoute = (config = [], path = '/', result = [], auth) => {
+  config.forEach(r => {
+    // 如果children 不存在，说明没有子项，则存在页面
+    // 如果children 存在，但是所有的子项的都是hide，也说明，存在页面
+    if (!r.children || r.children.every(i => i.hide)) {
+      const LoadableComponent = Loadable({
+        delay: 2000,
+        loader: () => import(`./pages/${r.key}`),
+        loading: (props) => {
+          if (props.error) {
+            return (
+              <Result
+                status="error"
+                title="加载失败"
+                subTitle={JSON.stringify(props.error.message)}
+              />
+            );
+          } else if (props.isLoading) {
+            return <Loading />
+          }
+          return null;
+        },
+        render(loaded, props) {
+          const Component = loaded.default;
+          return <Component  {...props}  />
+        }
+      });
+      result.push(<Route exact key={`${path}${r.key}`} path={`${path}${r.key}`} component={LoadableComponent} />)
+    } else {
+      generateRoute(r.children, `${path}${r.key}/`, result, auth);
+    }
+  });
+  return result;
+}
+/**
+ * 创建路由
+ *
+ */
+export const createRoute = (config = [], auth) => {
+  const routeArr = generateRoute(config, '/', [], auth);
+  return routeArr;
 }

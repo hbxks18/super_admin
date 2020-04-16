@@ -3,17 +3,16 @@ import { Layout, Menu, Breadcrumb, Result, Button } from 'antd';
 import styled from 'styled-components';
 import { BrowserRouter as Router, Route, Link, NavLink, Switch, Redirect, withRouter } from 'react-router-dom';
 
-import { createMenu, config } from '../../router';
+import { createRoute, createMenu, config } from '../../router';
 
 import NoFound from '../NoFound';
 import NoPower from '../NoPower';
-import Home from '../Home';
+
 
 import logo from '../../assets/logo.svg'
 
 
 const { Header, Content, Footer, Sider } = Layout;
-const { SubMenu } = Menu;
 
 const LayoutExt = styled(Layout)`
   height: 100vh;
@@ -66,7 +65,7 @@ class BasicLayout extends React.Component {
   state = {
     collapsed: false,
     selectedKeys: [],
-    defaultOpenKeys: [],
+    defaultOpenKeys: [], // 仅打开当前选中项的菜单
   };
 
   componentWillMount() {
@@ -79,7 +78,6 @@ class BasicLayout extends React.Component {
    */
   initSelectKeys = () => {
     const { location: { pathname } } = this.props;
-    console.log(pathname.split('/').slice(1, -1))
     this.setState({
       selectedKeys: pathname.split('/').slice(1),
       defaultOpenKeys: pathname.split('/').slice(1, -1),
@@ -130,8 +128,9 @@ class BasicLayout extends React.Component {
             </BreadContent>
             <Main>
               <Switch>
-                <Route exact path='/' component={Home}/>
-                <Route exact path='/home' component={Home}/>
+                {createRoute(config, [])}
+                {/* <Route exact path='/' component={Home}/>
+                <Route exact path='/home' component={Home}/> */}
                 <Route exact path='/NoPower' component={NoPower}/>
                 <Route component={NoFound}/>
               </Switch>

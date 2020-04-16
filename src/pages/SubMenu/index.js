@@ -19,13 +19,13 @@ const HomeWrapper = styled.div`
  * @param {*} props
  * @returns
  */
-const Home = (props) => {
+const SubMenu = (props) => {
 
   return (
     <HomeWrapper>
-        <img src={homeImg} alt='home' />
+        SubMenu
     </HomeWrapper>
   );
 }
 
-export default Home;
+export default SubMenu;
