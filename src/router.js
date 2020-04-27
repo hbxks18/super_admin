@@ -1,13 +1,10 @@
-import React from 'react';
-import {
-  HomeOutlined,
-  MenuOutlined
-} from '@ant-design/icons';
-import { Menu, Spin, Result, Button, Typography } from 'antd';
-import { Route } from 'react-router-dom';
-import Loadable from 'react-loadable';
+import React from "react"
+import { HomeOutlined, MenuOutlined } from "@ant-design/icons"
+import { Menu, Spin, Result, Button, Typography } from "antd"
+import { Route } from "react-router-dom"
+import Loadable from "react-loadable"
 
-import Loading from '@/components/Loading'
+import Loading from "@/components/Loading"
 /**
  * 路由相关配置
  * name: string 当前页面名称，在面包屑中的展示名称
@@ -19,84 +16,91 @@ import Loading from '@/components/Loading'
  * children: array 内容与上方配置一致
  */
 
-const { SubMenu } = Menu;
-const { Item } = Menu;
+const { SubMenu } = Menu
+const { Item } = Menu
 export const config = [
   {
-    name: '首页',
+    name: "首页",
     icon: <HomeOutlined />,
     auth: true,
-    key: 'Home',
+    key: "Home",
   },
   {
-    name: '菜单',
-    icon:<MenuOutlined />,
+    name: "菜单",
+    icon: <MenuOutlined />,
     auth: true,
-    key: 'Menu',
+    key: "Menu",
     children: [
       {
-        name: '子菜单',
+        name: "子菜单",
         auth: true,
-        key: 'SubMenu',
+        key: "SubMenu",
       },
       {
-        name: '子菜单1',
+        name: "子菜单1",
         auth: true,
-        key: 'SubMenu1',
-      }
+        key: "SubMenu1",
+      },
+      {
+        name: "客户列表",
+        auth: true,
+        key: "Customer",
+      },
     ],
   },
-
-
-];
+]
 /**
  * 创建菜单
  *
  */
 export const createMenu = (config = [], auth) => {
   if (!config || !config.length) {
-    return [];
+    return []
   }
   return config.map(m => {
     // TODO: 权限逻辑的判断
     if (m.hide) {
-      return null;
+      return null
     }
-    const isSubMenu = !!m.children?.length;
+    const isSubMenu = !!m.children?.length
     // const Icon = m.icon ? m.icon : null;
     if (isSubMenu && m.children.some(sub => !sub.hide)) {
       return (
-      <SubMenu 
-        key={m.path || m.key}
-        title={
-          <span>
-            {m.icon ? m.icon : null}
-            <span>{m.name}</span>
-          </span>
-        }
-      >
-        {createMenu(m.children, auth)}
-      </SubMenu>);
+        <SubMenu
+          key={m.path || m.key}
+          title={
+            <span>
+              {m.icon ? m.icon : null}
+              <span>{m.name}</span>
+            </span>
+          }
+        >
+          {createMenu(m.children, auth)}
+        </SubMenu>
+      )
     }
     return (
-    <Item
-      key={m.path || m.key}
-    >
-      {m.icon ? m.icon : null}
-      <span>{m.name}</span>
-    </Item>);
+      <Item key={m.path || m.key}>
+        {m.icon ? m.icon : null}
+        <span>{m.name}</span>
+      </Item>
+    )
   })
 }
 
-const generateRoute = (config = [], path = '/', result = [], auth) => {
+const generateRoute = (config = [], path = "/", result = [], auth) => {
   config.forEach(r => {
     // 如果children 不存在，说明没有子项，则存在页面
     // 如果children 存在，但是所有的子项的都是hide，也说明，存在页面
     if (!r.children || r.children.every(i => i.hide)) {
-      const LoadableComponent = Loadable({
+      const LoadableComponent = Loadable.Map({
         delay: 200,
-        loader: () => import(`@/pages/${r.key}`),
-        loading: (props) => {
+        loader: {
+          page: () => import(`@/pages/${r.key}`),
+          pageStore: () => import(`@/pages/${r.key}/store.js`),
+          baseStore: () => import(`@/store/store.js`),
+        },
+        loading: props => {
           if (props.error) {
             return (
               <Result
@@ -104,29 +108,41 @@ const generateRoute = (config = [], path = '/', result = [], auth) => {
                 title="加载失败"
                 subTitle={JSON.stringify(props.error.message)}
               />
-            );
+            )
           } else if (props.isLoading) {
             return <Loading />
           }
-          return null;
+          return null
         },
         render(loaded, props) {
-          const Component = loaded.default;
-          return <Component  {...props}  />
-        }
-      });
-      result.push(<Route exact key={`${path}${r.key}`} path={`${path}${r.key}`} component={LoadableComponent} />)
+          const Component = loaded.page.default
+          const pageStoreName = r.key.toLocaleLowerCase()
+          const stores = {
+            base: loaded.baseStore.default,
+            [pageStoreName]: loaded.pageStore.default,
+          }
+          return <Component {...props} {...stores} />
+        },
+      })
+      result.push(
+        <Route
+          exact
+          key={`${path}${r.key}`}
+          path={`${path}${r.key}`}
+          component={LoadableComponent}
+        />
+      )
     } else {
-      generateRoute(r.children, `${path}${r.key}/`, result, auth);
+      generateRoute(r.children, `${path}${r.key}/`, result, auth)
     }
-  });
-  return result;
+  })
+  return result
 }
 /**
  * 创建路由
  *
  */
 export const createRoute = (config = [], auth) => {
-  const routeArr = generateRoute(config, '/', [], auth);
-  return routeArr;
+  const routeArr = generateRoute(config, "/", [], auth)
+  return routeArr
 }

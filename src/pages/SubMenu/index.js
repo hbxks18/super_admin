@@ -1,29 +1,24 @@
-import React from 'react';
+import React, { Component } from "react"
 // import { Result, Button } from 'antd';
-import styled from 'styled-components';
-
+import styled from "styled-components"
+// import Super from "@/store/Super"
 
 const HomeWrapper = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-`;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+`
 
-
-/**
- * 首页
- *
- * @param {*} props
- * @returns
- */
-const SubMenu = (props) => {
-
-  return (
-    <HomeWrapper>
-        SubMenu
-    </HomeWrapper>
-  );
+class SubMenu extends Component {
+  componentDidMount() {
+    // console.log("原来的上树")
+    // console.log(Super);
+  }
+  render() {
+    return <HomeWrapper>SubMenu</HomeWrapper>
+  }
 }
 
-export default SubMenu;
+// console.log(SubMenu)
+export default SubMenu
