@@ -1,9 +1,10 @@
 import React from "react"
 import { HomeOutlined, MenuOutlined } from "@ant-design/icons"
-import { Menu, Spin, Result, Button, Typography } from "antd"
-import { Route } from "react-router-dom"
+import { Menu, Spin, Result, Button, Breadcrumb } from "antd"
+import { Route, Link, withRouter } from "react-router-dom"
 import Loadable from "react-loadable"
 
+import { arrayTreeFilter } from "@/utils/common"
 import Loading from "@/components/Loading"
 /**
  * 路由相关配置
@@ -24,6 +25,7 @@ export const config = [
     icon: <HomeOutlined />,
     auth: true,
     key: "Home",
+    path: "home",
   },
   {
     name: "菜单",
@@ -97,7 +99,8 @@ const generateRoute = (config = [], path = "/", result = [], auth) => {
         delay: 200,
         loader: {
           page: () => import(`@/pages/${r.key}`),
-          pageStore: () => import(`@/pages/${r.key}/store.js`),
+          pageStore: () =>
+            import(`@/pages/${r.key}/store.js`).catch(err => null), // 页面store非必须的
           baseStore: () => import(`@/store/store.js`),
         },
         loading: props => {
@@ -119,7 +122,7 @@ const generateRoute = (config = [], path = "/", result = [], auth) => {
           const pageStoreName = r.key.toLocaleLowerCase()
           const stores = {
             base: loaded.baseStore.default,
-            [pageStoreName]: loaded.pageStore.default,
+            [pageStoreName]: loaded?.pageStore?.default,
           }
           return <Component {...props} {...stores} />
         },
@@ -127,8 +130,8 @@ const generateRoute = (config = [], path = "/", result = [], auth) => {
       result.push(
         <Route
           exact
-          key={`${path}${r.key}`}
-          path={`${path}${r.key}`}
+          key={`${path}${r.path || r.key}`}
+          path={`${path}${r.path || r.key}`}
           component={LoadableComponent}
         />
       )
@@ -145,4 +148,36 @@ const generateRoute = (config = [], path = "/", result = [], auth) => {
 export const createRoute = (config = [], auth) => {
   const routeArr = generateRoute(config, "/", [], auth)
   return routeArr
+}
+/**
+ * 创建面包屑
+ *
+ */
+export const createBreadcrumb = (config, location, match) => {
+  const { pathname } = location
+  const paths = pathname.split("/").slice(1)
+  const routes = arrayTreeFilter(config, (item, level) => {
+    if (paths[level]) {
+      return item.path === paths[level] || item.key === paths[level]
+    }
+    return false
+  })
+  return (
+    <Breadcrumb>
+      {routes.map((r, i) => {
+        const isLink =
+          (!r.children || r.children.every(subr => subr.hide)) &&
+          i !== routes.length - 1
+        let path = ""
+        if (isLink) {
+          path = routes.slice(0, i + 1).join("/")
+        }
+        return (
+          <Breadcrumb.Item>
+            {isLink ? <Link to={path}>{r.name}</Link> : <span>{r.name}</span>}
+          </Breadcrumb.Item>
+        )
+      })}
+    </Breadcrumb>
+  )
 }
