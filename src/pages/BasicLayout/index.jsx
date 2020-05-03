@@ -140,10 +140,6 @@ class BasicLayout extends React.Component {
           <ContentExt>
             <BreadContent>
               {createBreadcrumb(config, location, match)}
-              {/* <Breadcrumb>
-                <Breadcrumb.Item>User</Breadcrumb.Item>
-                <Breadcrumb.Item>Bill</Breadcrumb.Item>
-              </Breadcrumb> */}
             </BreadContent>
             <Main>
               <Switch>
