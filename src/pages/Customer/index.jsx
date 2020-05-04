@@ -5,16 +5,24 @@ import { Card, Button } from "antd"
 import styled from "styled-components"
 
 import FunctionsAndSearchToolbar from "./module/FunctionsAndSearchToolbar"
+import DataTable from "./module/DataTable"
 
 @observer
 class Page extends Component {
+  componentDidMount() {
+    const { customer } = this.props
+    customer.load()
+  }
+  componentWillUnmount() {
+    const { customer } = this.props
+    customer.clear()
+  }
   render() {
     const { customer, base } = this.props
-    console.log("Page -> render -> this.props", this.props)
-    const { count, setCount } = customer
     return (
-      <Card title="Default size card" extra={<Button>More</Button>}>
-        <FunctionsAndSearchToolbar />
+      <Card title="Default size card" extra={<Button>新建</Button>}>
+        <FunctionsAndSearchToolbar customer={customer} />
+        <DataTable customer={customer} />
       </Card>
     )
   }

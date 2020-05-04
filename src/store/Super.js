@@ -1,4 +1,4 @@
-import { observable, configure, action, runInAction } from "mobx"
+import { observable, configure, action, runInAction, isObservable } from "mobx"
 import { asyncAction } from "@/utils/mobxUtils"
 import { loading } from "@/utils/decorator"
 
@@ -24,8 +24,19 @@ export default class SuperStroe {
     }
   }
 
+  @action setVal = (name, value, key) => {
+    if (!isObservable(this[name])) {
+      throw new Error(`${name} 未被观察`)
+    }
+    if (key) {
+      this[name][key] = value
+    } else {
+      this[name] = value
+    }
+  }
+
   // 清空查询条件
-  @action clear() {
+  @action clear = () => {
     if (this.pagination && this.query) {
       this.pagination = {
         page: 1,

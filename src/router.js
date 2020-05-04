@@ -3,6 +3,8 @@ import { HomeOutlined, MenuOutlined } from "@ant-design/icons"
 import { Menu, Spin, Result, Button, Breadcrumb } from "antd"
 import { Route, Link, withRouter } from "react-router-dom"
 import Loadable from "react-loadable"
+import memoizeOne from "memoize-one"
+import isDeepEqual from "lodash.isequal"
 
 import { arrayTreeFilter } from "@/utils/common"
 import Loading from "@/components/Loading"
@@ -55,7 +57,7 @@ export const config = [
  * 创建菜单
  *
  */
-export const createMenu = (config = [], auth) => {
+const createMenu = (config = [], auth) => {
   if (!config || !config.length) {
     return []
   }
@@ -145,7 +147,7 @@ const generateRoute = (config = [], path = "/", result = [], auth) => {
  * 创建路由
  *
  */
-export const createRoute = (config = [], auth) => {
+const createRoute = (config = [], auth) => {
   const routeArr = generateRoute(config, "/", [], auth)
   return routeArr
 }
@@ -153,7 +155,7 @@ export const createRoute = (config = [], auth) => {
  * 创建面包屑
  *
  */
-export const createBreadcrumb = (config, location, match) => {
+const createBreadcrumb = (config, location, match) => {
   const { pathname } = location
   const paths = pathname.split("/").slice(1)
   const routes = arrayTreeFilter(config, (item, level) => {
@@ -173,11 +175,17 @@ export const createBreadcrumb = (config, location, match) => {
           path = routes.slice(0, i + 1).join("/")
         }
         return (
-          <Breadcrumb.Item>
+          <Breadcrumb.Item key={i}>
             {isLink ? <Link to={path}>{r.name}</Link> : <span>{r.name}</span>}
           </Breadcrumb.Item>
         )
       })}
     </Breadcrumb>
   )
+}
+
+export default {
+  createMenu: memoizeOne(createMenu, isDeepEqual),
+  createRoute: memoizeOne(createRoute, isDeepEqual),
+  createBreadcrumb: memoizeOne(createBreadcrumb, isDeepEqual),
 }

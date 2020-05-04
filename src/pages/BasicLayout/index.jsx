@@ -11,7 +11,7 @@ import {
   withRouter,
 } from "react-router-dom"
 
-import { createRoute, createMenu, createBreadcrumb, config } from "../../router"
+import router, { config } from "../../router"
 
 import NoFound from "../NoFound"
 import NoPower from "../NoPower"
@@ -19,6 +19,7 @@ import NoPower from "../NoPower"
 import logo from "../../assets/logo.svg"
 
 const { Header, Content, Footer, Sider } = Layout
+const { createRoute, createMenu, createBreadcrumb } = router
 
 const LayoutExt = styled(Layout)`
   height: 100vh;
@@ -63,6 +64,16 @@ const Main = styled.section`
   scrollbar-width: none; /* firefox */
   &::-webkit-scrollbar {
     display: none; /* Chrome Safari */
+  }
+  .ant-form {
+    margin-bottom: 16px;
+    .ant-form-item-control-input-content {
+      /* 如果某些表单组件宽度需要撑满，可以在此添加上对应的类名 */
+      .ant-input-number,
+      .ant-picker {
+        width: 100%;
+      }
+    }
   }
 `
 
@@ -155,7 +166,7 @@ class BasicLayout extends React.Component {
             </Main>
           </ContentExt>
           <Footer style={{ textAlign: "center" }}>
-            Ant Design ©2018 Created by Ant UED
+            Super Admin ©2020 Created by Hbx
           </Footer>
         </Layout>
       </LayoutExt>
