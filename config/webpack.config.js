@@ -1,77 +1,78 @@
-"use strict";
+"use strict"
 
-const fs = require("fs");
-const path = require("path");
-const webpack = require("webpack");
-const resolve = require("resolve");
-const PnpWebpackPlugin = require("pnp-webpack-plugin");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
-const InlineChunkHtmlPlugin = require("react-dev-utils/InlineChunkHtmlPlugin");
-const TerserPlugin = require("terser-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-const safePostCssParser = require("postcss-safe-parser");
-const ManifestPlugin = require("webpack-manifest-plugin");
-const InterpolateHtmlPlugin = require("react-dev-utils/InterpolateHtmlPlugin");
-const WorkboxWebpackPlugin = require("workbox-webpack-plugin");
-const WatchMissingNodeModulesPlugin = require("react-dev-utils/WatchMissingNodeModulesPlugin");
-const ModuleScopePlugin = require("react-dev-utils/ModuleScopePlugin");
-const getCSSModuleLocalIdent = require("react-dev-utils/getCSSModuleLocalIdent");
-const paths = require("./paths");
-const modules = require("./modules");
-const getClientEnvironment = require("./env");
-const ModuleNotFoundPlugin = require("react-dev-utils/ModuleNotFoundPlugin");
-const ForkTsCheckerWebpackPlugin = require("react-dev-utils/ForkTsCheckerWebpackPlugin");
-const typescriptFormatter = require("react-dev-utils/typescriptFormatter");
-const lessToJs = require("less-vars-to-js");
+const fs = require("fs")
+const path = require("path")
+const webpack = require("webpack")
+const resolve = require("resolve")
+const PnpWebpackPlugin = require("pnp-webpack-plugin")
+const HtmlWebpackPlugin = require("html-webpack-plugin")
+const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin")
+const InlineChunkHtmlPlugin = require("react-dev-utils/InlineChunkHtmlPlugin")
+const TerserPlugin = require("terser-webpack-plugin")
+const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin")
+const safePostCssParser = require("postcss-safe-parser")
+const ManifestPlugin = require("webpack-manifest-plugin")
+const InterpolateHtmlPlugin = require("react-dev-utils/InterpolateHtmlPlugin")
+const WorkboxWebpackPlugin = require("workbox-webpack-plugin")
+const WatchMissingNodeModulesPlugin = require("react-dev-utils/WatchMissingNodeModulesPlugin")
+const ModuleScopePlugin = require("react-dev-utils/ModuleScopePlugin")
+const getCSSModuleLocalIdent = require("react-dev-utils/getCSSModuleLocalIdent")
+const paths = require("./paths")
+const modules = require("./modules")
+const getClientEnvironment = require("./env")
+const ModuleNotFoundPlugin = require("react-dev-utils/ModuleNotFoundPlugin")
+const ForkTsCheckerWebpackPlugin = require("react-dev-utils/ForkTsCheckerWebpackPlugin")
+const typescriptFormatter = require("react-dev-utils/typescriptFormatter")
+const lessToJs = require("less-vars-to-js")
+const AntdIcontfontWebpackPlugin = require("antd-icontfont-webpack-plugin")
 
 const modifyVars = lessToJs(
   fs.readFileSync(`${paths.appSrc}/themes/antd.less`, "utf8")
-);
+)
 
-const postcssNormalize = require("postcss-normalize");
+const postcssNormalize = require("postcss-normalize")
 
-const appPackageJson = require(paths.appPackageJson);
+const appPackageJson = require(paths.appPackageJson)
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
-const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== "false";
+const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== "false"
 // Some apps do not need the benefits of saving a web request, so not inlining the chunk
 // makes for a smoother build process.
-const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== "false";
+const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== "false"
 
-const isExtendingEslintConfig = process.env.EXTEND_ESLINT === "true";
+const isExtendingEslintConfig = process.env.EXTEND_ESLINT === "true"
 
 const imageInlineSizeLimit = parseInt(
   process.env.IMAGE_INLINE_SIZE_LIMIT || "10000"
-);
+)
 
 // Check if TypeScript is setup
-const useTypeScript = fs.existsSync(paths.appTsConfig);
+const useTypeScript = fs.existsSync(paths.appTsConfig)
 
 // style files regexes
-const cssRegex = /\.css$/;
-const cssModuleRegex = /\.module\.css$/;
-const sassRegex = /\.(scss|sass)$/;
-const sassModuleRegex = /\.module\.(scss|sass)$/;
-const lessRegex = /\.less$/;
+const cssRegex = /\.css$/
+const cssModuleRegex = /\.module\.css$/
+const sassRegex = /\.(scss|sass)$/
+const sassModuleRegex = /\.module\.(scss|sass)$/
+const lessRegex = /\.less$/
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
 module.exports = function (webpackEnv) {
-  const isEnvDevelopment = webpackEnv === "development";
-  const isEnvProduction = webpackEnv === "production";
+  const isEnvDevelopment = webpackEnv === "development"
+  const isEnvProduction = webpackEnv === "production"
 
   // Variable used for enabling profiling in Production
   // passed into alias object. Uses a flag if passed into the build command
   const isEnvProductionProfile =
-    isEnvProduction && process.argv.includes("--profile");
+    isEnvProduction && process.argv.includes("--profile")
 
   // We will provide `paths.publicUrlOrPath` to our app
   // as %PUBLIC_URL% in `index.html` and `process.env.PUBLIC_URL` in JavaScript.
   // Omit trailing slash as %PUBLIC_URL%/xyz looks better than %PUBLIC_URL%xyz.
   // Get environment variables to inject into our app.
-  const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
+  const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1))
 
   // common function to get style loaders
   const getStyleLoaders = (cssOptions, preProcessor, preProcessorOptions) => {
@@ -114,7 +115,7 @@ module.exports = function (webpackEnv) {
           sourceMap: isEnvProduction && shouldUseSourceMap,
         },
       },
-    ].filter(Boolean);
+    ].filter(Boolean)
     if (preProcessor) {
       loaders.push(
         {
@@ -130,10 +131,10 @@ module.exports = function (webpackEnv) {
             preProcessorOptions || {}
           ),
         }
-      );
+      )
     }
-    return loaders;
-  };
+    return loaders
+  }
 
   return {
     mode: isEnvProduction ? "production" : isEnvDevelopment && "development",
@@ -618,17 +619,17 @@ module.exports = function (webpackEnv) {
         publicPath: paths.publicUrlOrPath,
         generate: (seed, files, entrypoints) => {
           const manifestFiles = files.reduce((manifest, file) => {
-            manifest[file.name] = file.path;
-            return manifest;
-          }, seed);
+            manifest[file.name] = file.path
+            return manifest
+          }, seed)
           const entrypointFiles = entrypoints.main.filter(
             fileName => !fileName.endsWith(".map")
-          );
+          )
 
           return {
             files: manifestFiles,
             entrypoints: entrypointFiles,
-          };
+          }
         },
       }),
       // Moment.js is an extremely popular library that bundles large locale files
@@ -682,6 +683,10 @@ module.exports = function (webpackEnv) {
           // The formatter is invoked directly in WebpackDevServerUtils during development
           formatter: isEnvProduction ? typescriptFormatter : undefined,
         }),
+      new AntdIcontfontWebpackPlugin({
+        url: "http://at.alicdn.com/t/font_1813645_saetskfq0x.js",
+        scriptUrl: "/static/js/iconfont.js",
+      }),
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.
     // Tell webpack to provide empty mocks for them so importing them works.
@@ -698,5 +703,5 @@ module.exports = function (webpackEnv) {
     // Turn off performance processing because we utilize
     // our own hints via the FileSizeReporter
     performance: false,
-  };
-};
+  }
+}

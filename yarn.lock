@@ -2001,6 +2001,11 @@ ansi-styles@^4.0.0, ansi-styles@^4.1.0:
     "@types/color-name" "^1.1.1"
     color-convert "^2.0.1"
 
+antd-icontfont-webpack-plugin@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/antd-icontfont-webpack-plugin/-/antd-icontfont-webpack-plugin-1.0.1.tgz#8cd73fd6c957492de2e82f57165ef056a2fa3a32"
+  integrity sha512-kKt5gYxntuWybz2UqeGZhIzFuvembXbrhk7IX+GVCQYqebd/QBmaGAr7Ng9kp17PGKI5H0VhLMzcGs4rr2I+yA==
+
 antd@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/antd/-/antd-4.2.0.tgz#1b6c9cb1d534b33e83a24052d9a7ccbaba19d138"

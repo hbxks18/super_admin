@@ -8,6 +8,7 @@ import isDeepEqual from "lodash.isequal"
 
 import { arrayTreeFilter } from "@/utils/common"
 import Loading from "@/components/Loading"
+import IconFont from "@/components/Iconfont"
 /**
  * 路由相关配置
  * name: string 当前页面名称，在面包屑中的展示名称
@@ -49,6 +50,7 @@ export const config = [
         name: "客户列表",
         auth: true,
         key: "Customer",
+        icon: <IconFont type="iconcustomerorder" />,
       },
     ],
   },
