@@ -1,6 +1,7 @@
 import { observable, configure, action, runInAction } from "mobx"
 
 import { loading } from "@/utils/decorator"
+import { MODAL_TYPE } from "./enum"
 import SuperStroe from "@/store/Super"
 
 const mockAjax = (params, res) =>
@@ -18,6 +19,7 @@ const mockAjax = (params, res) =>
  * @export
  * @class Store
  */
+
 class Store extends SuperStroe {
   @observable pagination = {
     page: 1,
@@ -25,6 +27,11 @@ class Store extends SuperStroe {
   }
   @observable query = {}
   @observable data = []
+  @observable modalData = {
+    visible: false,
+    type: MODAL_TYPE.DEFINE.CREATE,
+  }
+  @observable modalType = false
 
   @action.bound @loading async load() {
     const params = { ...this.query, ...this.pagination }

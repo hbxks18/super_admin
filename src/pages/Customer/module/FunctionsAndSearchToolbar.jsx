@@ -15,6 +15,8 @@ import {
 import styled from "styled-components"
 import { observer } from "mobx-react"
 
+import { GENDER } from "../enum"
+
 const { RangePicker } = DatePicker
 
 const { Option } = Select
@@ -67,8 +69,11 @@ const FunctionsAndSearchToolbar = props => {
       el: (
         <Select placeholder="请选择">
           <Option value="">全部</Option>
-          <Option value="1">男</Option>
-          <Option value="2">女</Option>
+          {Object.entries(GENDER).map(([k, v]) => (
+            <Option key={k} value={k}>
+              {v}
+            </Option>
+          ))}
         </Select>
       ),
       otherProps: {},
