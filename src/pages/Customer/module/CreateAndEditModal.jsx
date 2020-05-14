@@ -38,8 +38,6 @@ const CreateAndEditModal = props => {
       <p>Some contents...</p>
       <p>Some contents...</p>
       <p>Some contents...</p>
-      <p>Some contents...</p>
-      <p>Some contents...</p>
     </Modal>
   )
 }

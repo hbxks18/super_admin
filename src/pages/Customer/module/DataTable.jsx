@@ -16,8 +16,10 @@ import { MODAL_TYPE } from "../enum"
 const DataTable = props => {
   const { customer } = props
   const onClickView = () => {
-    customer.setVal("modalData", true, "visible")
-    customer.setVal("modalData", MODAL_TYPE.DEFINE.VIEW, "type")
+    customer.setVal("modalData", {
+      visible: true,
+      type: MODAL_TYPE.DEFINE.VIEW,
+    })
   }
   const columns = [
     {

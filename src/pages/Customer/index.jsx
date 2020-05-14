@@ -7,7 +7,6 @@ import styled from "styled-components"
 import FunctionsAndSearchToolbar from "./module/FunctionsAndSearchToolbar"
 import DataTable from "./module/DataTable"
 import CreateAndEditModal from "./module/CreateAndEditModal"
-
 import { MODAL_TYPE } from "./enum"
 
 @observer
