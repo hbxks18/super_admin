@@ -5,6 +5,8 @@ import { Table, Tag } from "antd"
 import styled from "styled-components"
 import { observer } from "mobx-react"
 
+import { MODAL_TYPE } from "../enum"
+
 /**
  * 筛选区域
  *
@@ -13,6 +15,10 @@ import { observer } from "mobx-react"
  */
 const DataTable = props => {
   const { customer } = props
+  const onClickView = () => {
+    customer.setVal("modalData", true, "visible")
+    customer.setVal("modalData", MODAL_TYPE.DEFINE.VIEW, "type")
+  }
   const columns = [
     {
       title: "Name",
@@ -55,8 +61,10 @@ const DataTable = props => {
       key: "action",
       render: (text, record) => (
         <span>
-          <a style={{ marginRight: 16 }}>Invite {record.name}</a>
-          <a>Delete</a>
+          <a onClick={onClickView} style={{ marginRight: 16 }}>
+            查看
+          </a>
+          <a>删除</a>
         </span>
       ),
     },

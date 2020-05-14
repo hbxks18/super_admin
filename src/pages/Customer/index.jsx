@@ -8,6 +8,8 @@ import FunctionsAndSearchToolbar from "./module/FunctionsAndSearchToolbar"
 import DataTable from "./module/DataTable"
 import CreateAndEditModal from "./module/CreateAndEditModal"
 
+import { MODAL_TYPE } from "./enum"
+
 @observer
 class Page extends Component {
   componentDidMount() {
@@ -24,7 +26,14 @@ class Page extends Component {
       <Card
         title="Default size card"
         extra={
-          <Button onClick={() => customer.setVal("modalData", true, "visible")}>
+          <Button
+            onClick={() =>
+              customer.setVal("modalData", {
+                visible: true,
+                type: MODAL_TYPE.DEFINE.CREATE,
+              })
+            }
+          >
             新建
           </Button>
         }

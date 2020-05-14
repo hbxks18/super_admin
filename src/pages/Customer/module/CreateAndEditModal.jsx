@@ -5,6 +5,8 @@ import { Modal, Button } from "antd"
 import styled from "styled-components"
 import { observer } from "mobx-react"
 
+import { MODAL_TYPE } from "../enum"
+
 /**
  * 新增 OR 编辑 OR 查看的弹窗
  *
@@ -18,7 +20,7 @@ const CreateAndEditModal = props => {
   return (
     <Modal
       visible={visible}
-      title={type}
+      title={MODAL_TYPE.DATA[type]}
       footer={[
         <Button key="back" onClick={() => {}}>
           取消
