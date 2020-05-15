@@ -4,6 +4,8 @@ import { observer } from "mobx-react"
 import { Card, Button } from "antd"
 import styled from "styled-components"
 
+// import ErrorBoundary from "@/components/ErrorBoundary"
+
 import FunctionsAndSearchToolbar from "./module/FunctionsAndSearchToolbar"
 import DataTable from "./module/DataTable"
 import CreateAndEditModal from "./module/CreateAndEditModal"
@@ -18,6 +20,9 @@ class Page extends Component {
   componentWillUnmount() {
     const { customer } = this.props
     customer.clear()
+  }
+  componentDidCatch(error, info) {
+    // console.log(error, info)
   }
   render() {
     const { customer, base } = this.props

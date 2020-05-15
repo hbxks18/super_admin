@@ -8,7 +8,7 @@ import { observer } from "mobx-react"
 import { MODAL_TYPE } from "../enum"
 
 /**
- * 筛选区域
+ * 表格区域
  *
  * @param {*} props
  * @returns

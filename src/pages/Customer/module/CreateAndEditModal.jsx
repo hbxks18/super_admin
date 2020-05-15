@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { Modal, Button } from "antd"
 // import { withRouter } from "react-router-dom"
 // import { Result, Button } from 'antd';
@@ -17,12 +17,19 @@ const CreateAndEditModal = props => {
   const { customer } = props
   const { modalData } = customer
   const { visible, type } = modalData
+  const [arr, setArr] = useState([1, 2, 3, 4])
   return (
     <Modal
       visible={visible}
       title={MODAL_TYPE.DATA[type]}
       footer={[
-        <Button key="back" onClick={() => {}}>
+        <Button
+          key="back"
+          onClick={() => {
+            // throw new Error("我日你哥 123")
+            // setArr(null)
+          }}
+        >
           取消
         </Button>,
         <Button
@@ -38,6 +45,9 @@ const CreateAndEditModal = props => {
       <p>Some contents...</p>
       <p>Some contents...</p>
       <p>Some contents...</p>
+      {arr.map(i => (
+        <span key={i}>{i}</span>
+      ))}
     </Modal>
   )
 }
