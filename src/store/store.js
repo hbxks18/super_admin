@@ -10,6 +10,12 @@ import SuperStroe from "./Super"
  * @class BaseStore
  */
 class BaseStore extends SuperStroe {
+  @observable auth = [] // 权限集合
+
+  @observable currentOpenkeys = [] // 当前菜单的展开项
+
+  @observable currentSelectedKeys = [] // 当前菜单的选中项
+
   @observable version = "0.0.1"
 
   @action.bound handleUpdateVersion(v) {

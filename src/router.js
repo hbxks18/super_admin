@@ -28,7 +28,6 @@ export const config = [
     icon: <HomeOutlined />,
     auth: true,
     key: "Home",
-    path: "home",
   },
   {
     name: "菜单",
@@ -36,16 +35,6 @@ export const config = [
     auth: true,
     key: "Menu",
     children: [
-      {
-        name: "子菜单",
-        auth: true,
-        key: "SubMenu",
-      },
-      {
-        name: "子菜单1",
-        auth: true,
-        key: "SubMenu1",
-      },
       {
         name: "客户列表",
         auth: true,
@@ -60,6 +49,7 @@ export const config = [
  *
  */
 const createMenu = (config = [], auth) => {
+  console.log("我日老子执行了")
   if (!config || !config.length) {
     return []
   }

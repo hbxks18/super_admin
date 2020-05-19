@@ -1,4 +1,5 @@
 import React from "react"
+import { Provider } from "mobx-react"
 import {
   BrowserRouter as Router,
   Route,
@@ -12,6 +13,7 @@ import { ConfigProvider, Switch as SwitchAntd } from "antd"
 import moment from "moment"
 import BasicLayout from "./pages/BasicLayout"
 import "./App.scss"
+import base from "@/store/store"
 
 import zhCN from "antd/es/locale/zh_CN"
 import "moment/locale/zh-cn"
@@ -26,14 +28,16 @@ const Login = () => (
 
 function App() {
   return (
-    <ConfigProvider locale={zhCN}>
-      <Router>
-        <Switch>
-          <Route exact path="/login" component={Login} />
-          <Route path="/" component={BasicLayout} />
-        </Switch>
-      </Router>
-    </ConfigProvider>
+    <Provider base={base}>
+      <ConfigProvider locale={zhCN}>
+        <Router>
+          <Switch>
+            <Route exact path="/login" component={Login} />
+            <Route path="/" component={BasicLayout} />
+          </Switch>
+        </Router>
+      </ConfigProvider>
+    </Provider>
   )
 }
 

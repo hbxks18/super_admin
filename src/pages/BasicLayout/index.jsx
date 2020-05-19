@@ -1,5 +1,6 @@
 import React from "react"
 import { Layout, Menu, Breadcrumb, Result, Button } from "antd"
+import { inject, observer } from "mobx-react"
 import styled from "styled-components"
 import {
   BrowserRouter as Router,
@@ -76,10 +77,12 @@ const Main = styled.section`
     }
   }
 `
-
+@inject("base")
+@observer
 class BasicLayout extends React.Component {
   state = {
     collapsed: false,
+    listen: null,
     selectedKeys: [],
     defaultOpenKeys: [], // 仅打开当前选中项的菜单
   }
@@ -95,12 +98,25 @@ class BasicLayout extends React.Component {
   initSelectKeys = () => {
     const {
       location: { pathname },
+      history: { listen },
+      base,
     } = this.props
-    this.setState({
-      // selectedKeys: pathname.split('/').slice(1),
-      defaultOpenKeys: pathname.split("/").slice(1, -1),
+
+    base.setVal("currentOpenkeys", this.getOpenKeysByPathname(pathname))
+    base.setVal("currentSelectedKeys", this.getSelectedKeysByPathname(pathname))
+
+    this.listen = listen(({ pathname }) => {
+      base.setVal("currentOpenkeys", this.getOpenKeysByPathname(pathname))
+      base.setVal(
+        "currentSelectedKeys",
+        this.getSelectedKeysByPathname(pathname)
+      )
     })
   }
+
+  getOpenKeysByPathname = pathname => pathname.split("/").slice(1, -1)
+
+  getSelectedKeysByPathname = pathname => pathname.split("/").slice(1)
 
   onCollapse = collapsed => {
     this.setState({ collapsed })
@@ -109,7 +125,10 @@ class BasicLayout extends React.Component {
   onClickMenuItem = ({ item, key, keyPath, domEvent }) => {
     const { history } = this.props
     history.push(`/${keyPath.reverse().join("/")}`)
-    console.log("keyPath", keyPath)
+  }
+  onOpenChange = openKeys => {
+    const { base } = this.props
+    base.setVal("currentOpenkeys", openKeys)
   }
 
   render() {
@@ -118,10 +137,8 @@ class BasicLayout extends React.Component {
       location: { pathname },
       location,
       match,
+      base,
     } = this.props
-
-    const selectedKeys = pathname.split("/").slice(1)
-    const { defaultOpenKeys } = this.state
     return (
       <LayoutExt>
         <Sider
@@ -135,10 +152,11 @@ class BasicLayout extends React.Component {
             </SiderLogo>
             <SiderMenu>
               <Menu
-                selectedKeys={selectedKeys}
-                defaultOpenKeys={defaultOpenKeys}
+                selectedKeys={base.currentSelectedKeys}
+                openKeys={base.currentOpenkeys}
                 theme="dark"
                 onClick={this.onClickMenuItem}
+                onOpenChange={this.onOpenChange}
                 mode="inline"
               >
                 {createMenu(config, [])}
