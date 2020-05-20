@@ -1,5 +1,6 @@
-import { observable, configure, action, runInAction } from "mobx"
-
+import { observable, computed, action, runInAction } from "mobx"
+import { arrayTreeFilter } from "@/utils/common"
+import { config } from "@/router.js"
 // import { loading } from "@/utils/decorator"
 import SuperStroe from "./Super"
 
@@ -16,7 +17,21 @@ class BaseStore extends SuperStroe {
 
   @observable currentSelectedKeys = [] // 当前菜单的选中项
 
-  @observable version = "0.0.1"
+  @computed get getRouteBySelectedKeys() {
+    const routes = arrayTreeFilter(config, (item, level) => {
+      if (this.currentSelectedKeys[level]) {
+        return (
+          item.path === this.currentSelectedKeys[level] ||
+          item.key === this.currentSelectedKeys[level]
+        )
+      }
+      return false
+    })
+    return routes
+  }
+
+  @observable
+  version = "0.0.1"
 
   @action.bound handleUpdateVersion(v) {
     this.version = v

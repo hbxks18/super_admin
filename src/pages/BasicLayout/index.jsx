@@ -17,10 +17,12 @@ import router, { config } from "../../router"
 import NoFound from "../NoFound"
 import NoPower from "../NoPower"
 
+import BreadCrumb from "@/components/BreadCrumb"
+
 import logo from "../../assets/logo.svg"
 
 const { Header, Content, Footer, Sider } = Layout
-const { createRoute, createMenu, createBreadcrumb } = router
+const { createRoute, createMenu } = router
 
 const LayoutExt = styled(Layout)`
   height: 100vh;
@@ -119,6 +121,16 @@ class BasicLayout extends React.Component {
   getSelectedKeysByPathname = pathname => pathname.split("/").slice(1)
 
   onCollapse = collapsed => {
+    const {
+      location: { pathname },
+      base,
+    } = this.props
+    if (collapsed) {
+      base.setVal("currentOpenkeys", [])
+    } else {
+      // TODO: 此处每次展开菜单都会把子菜单打开
+      base.setVal("currentOpenkeys", this.getOpenKeysByPathname(pathname))
+    }
     this.setState({ collapsed })
   }
 
@@ -133,12 +145,8 @@ class BasicLayout extends React.Component {
 
   render() {
     // TODO: 当前选中项是根据路由自动匹配，但是展开项只是只使用了默认项，没有受控
-    const {
-      location: { pathname },
-      location,
-      match,
-      base,
-    } = this.props
+    const { location, match, base } = this.props
+    console.log("xxx", base.getRouteBySelectedKeys)
     return (
       <LayoutExt>
         <Sider
@@ -168,7 +176,7 @@ class BasicLayout extends React.Component {
           <HeaderExt />
           <ContentExt>
             <BreadContent>
-              {createBreadcrumb(config, location, match)}
+              <BreadCrumb routes={base.getRouteBySelectedKeys} />
             </BreadContent>
             <Main>
               <Switch>

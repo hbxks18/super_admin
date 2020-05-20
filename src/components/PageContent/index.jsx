@@ -1,6 +1,6 @@
 import * as React from "react"
 
-class ErrorBoundary extends React.Component {
+class PageContent extends React.Component {
   static getDerivedStateFromError() {
     return { hasError: true }
   }
@@ -40,4 +40,4 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-export default ErrorBoundary
+export default PageContent

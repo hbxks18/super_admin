@@ -21,14 +21,13 @@ class Page extends Component {
     const { customer } = this.props
     customer.clear()
   }
-  componentDidCatch(error, info) {
-    // console.log(error, info)
-  }
+
   render() {
     const { customer, base } = this.props
+    const selectedRoute = base.getRouteBySelectedKeys
     return (
       <Card
-        title="Default size card"
+        title={selectedRoute[selectedRoute.length - 1]?.name}
         extra={
           <Button
             onClick={() =>

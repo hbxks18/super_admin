@@ -143,41 +143,8 @@ const createRoute = (config = [], auth) => {
   const routeArr = generateRoute(config, "/", [], auth)
   return routeArr
 }
-/**
- * 创建面包屑
- *
- */
-const createBreadcrumb = (config, location, match) => {
-  const { pathname } = location
-  const paths = pathname.split("/").slice(1)
-  const routes = arrayTreeFilter(config, (item, level) => {
-    if (paths[level]) {
-      return item.path === paths[level] || item.key === paths[level]
-    }
-    return false
-  })
-  return (
-    <Breadcrumb>
-      {routes.map((r, i) => {
-        const isLink =
-          (!r.children || r.children.every(subr => subr.hide)) &&
-          i !== routes.length - 1
-        let path = ""
-        if (isLink) {
-          path = routes.slice(0, i + 1).join("/")
-        }
-        return (
-          <Breadcrumb.Item key={i}>
-            {isLink ? <Link to={path}>{r.name}</Link> : <span>{r.name}</span>}
-          </Breadcrumb.Item>
-        )
-      })}
-    </Breadcrumb>
-  )
-}
 
 export default {
   createMenu: memoizeOne(createMenu, isDeepEqual),
   createRoute: memoizeOne(createRoute, isDeepEqual),
-  createBreadcrumb: memoizeOne(createBreadcrumb, isDeepEqual),
 }
