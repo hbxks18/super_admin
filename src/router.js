@@ -9,6 +9,7 @@ import isDeepEqual from "lodash.isequal"
 import { arrayTreeFilter } from "@/utils/common"
 import Loading from "@/components/Loading"
 import IconFont from "@/components/Iconfont"
+import auth from "@/utils/auth"
 /**
  * 路由相关配置
  * name: string 当前页面名称，在面包屑中的展示名称
@@ -37,7 +38,7 @@ export const config = [
     children: [
       {
         name: "客户列表",
-        auth: true,
+        auth: 999,
         key: "Customer",
         icon: <IconFont type="iconcustomerorder" />,
       },
@@ -49,17 +50,20 @@ export const config = [
  *
  */
 const createMenu = (config = [], auth) => {
-  console.log("我日老子执行了")
   if (!config || !config.length) {
     return []
   }
   return config.map(m => {
-    // TODO: 权限逻辑的判断
     if (m.hide) {
+      // 隐藏菜单
+      return null
+    }
+    if (m.auth !== true && !auth.includes(m.auth)) {
+      // 非测试 且 权限里不包括
       return null
     }
     const isSubMenu = !!m.children?.length
-    // const Icon = m.icon ? m.icon : null;
+
     if (isSubMenu && m.children.some(sub => !sub.hide)) {
       return (
         <SubMenu
@@ -89,38 +93,60 @@ const generateRoute = (config = [], path = "/", result = [], auth) => {
     // 如果children 不存在，说明没有子项，则存在页面
     // 如果children 存在，但是所有的子项的都是hide，也说明，存在页面
     if (!r.children || r.children.every(i => i.hide)) {
-      const LoadableComponent = Loadable.Map({
-        delay: 200,
-        loader: {
-          page: () => import(`@/pages/${r.key}`),
-          pageStore: () =>
-            import(`@/pages/${r.key}/store.js`).catch(err => null), // 页面store非必须的
-          baseStore: () => import(`@/store/store.js`),
-        },
-        loading: props => {
-          if (props.error) {
-            return (
-              <Result
-                status="error"
-                title="加载失败"
-                subTitle={JSON.stringify(props.error.message)}
-              />
-            )
-          } else if (props.isLoading) {
-            return <Loading />
-          }
-          return null
-        },
-        render(loaded, props) {
-          const Component = loaded.page.default
-          const pageStoreName = r.key.toLocaleLowerCase()
-          const stores = {
-            base: loaded.baseStore.default,
-            [pageStoreName]: loaded?.pageStore?.default,
-          }
-          return <Component {...props} {...stores} />
-        },
-      })
+      let LoadableComponent = null
+      if (r.auth !== true && !auth.includes(r.auth)) {
+        LoadableComponent = () => (
+          <Result
+            status="403"
+            title="403"
+            subTitle="Sorry, you are not authorized to access this page."
+            extra={
+              <Button
+                onClick={() => {
+                  // history.push("/home")
+                }}
+                type="primary"
+              >
+                Back Home
+              </Button>
+            }
+          />
+        )
+      } else {
+        LoadableComponent = Loadable.Map({
+          delay: 200,
+          loader: {
+            page: () => import(`@/pages/${r.key}`),
+            pageStore: () =>
+              import(`@/pages/${r.key}/store.js`).catch(err => null), // 页面store非必须的
+            baseStore: () => import(`@/store/store.js`),
+          },
+          loading: props => {
+            if (props.error) {
+              return (
+                <Result
+                  status="error"
+                  title="加载失败"
+                  subTitle={JSON.stringify(props.error.message)}
+                />
+              )
+            } else if (props.isLoading) {
+              return <Loading />
+            }
+            return null
+          },
+          render(loaded, props) {
+            const Component = loaded.page.default
+            const pageStoreName = r.key.toLocaleLowerCase()
+            const stores = {
+              base: loaded.baseStore.default,
+              [pageStoreName]: loaded?.pageStore?.default,
+            }
+            return <Component {...props} {...stores} />
+          },
+        })
+      }
+
       result.push(
         <Route
           exact

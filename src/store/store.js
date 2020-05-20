@@ -11,7 +11,7 @@ import SuperStroe from "./Super"
  * @class BaseStore
  */
 class BaseStore extends SuperStroe {
-  @observable auth = [] // 权限集合
+  @observable auth = [999] // 权限集合
 
   @observable currentOpenkeys = [] // 当前菜单的展开项
 

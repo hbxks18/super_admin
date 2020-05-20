@@ -144,8 +144,7 @@ class BasicLayout extends React.Component {
   }
 
   render() {
-    // TODO: 当前选中项是根据路由自动匹配，但是展开项只是只使用了默认项，没有受控
-    const { location, match, base } = this.props
+    const { base } = this.props
     console.log("xxx", base.getRouteBySelectedKeys)
     return (
       <LayoutExt>
@@ -167,7 +166,7 @@ class BasicLayout extends React.Component {
                 onOpenChange={this.onOpenChange}
                 mode="inline"
               >
-                {createMenu(config, [])}
+                {createMenu(config, base.auth)}
               </Menu>
             </SiderMenu>
           </SiderContent>
@@ -185,7 +184,7 @@ class BasicLayout extends React.Component {
                   path="/"
                   render={props => <Redirect to="/Home" />}
                 />
-                {createRoute(config, [])}
+                {createRoute(config, base.auth)}
                 <Route exact path="/NoPower" component={NoPower} />
                 <Route component={NoFound} />
               </Switch>
