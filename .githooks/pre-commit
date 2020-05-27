@@ -1,0 +1,38 @@
+#!/bin/bash
+# eslint检查，只检查修改的文件
+#
+# If you absolutely must commit without testing,
+# use: git commit --no-verify
+
+# This will check only staged files to be commited.
+list=`git diff --relative --name-only HEAD | grep -e '.jsx\{0,1\}$'`;
+
+if [[ "$list" = "" ]]; then
+  exit 0
+fi
+
+PASS=true;
+
+for FILE in $list
+do
+  ./node_modules/.bin/eslint --fix --config=./.pre-commit-eslintrc.json \
+  --color "$FILE";
+
+  if [[ "$?" != 0 ]]; then
+    echo -e "ESLint 校验失败文件📁: $FILE\n"
+    PASS=false
+  fi
+done
+
+
+
+if ! $PASS; then
+  echo -e "👴🏿 老伙子，你的文件没有通过eslint的校验，我是不会让你提交的，嘿嘿嘿~\n"
+  exit 1
+else
+  echo -e "👶 小伙子，本次改动提交的文件通过了eslint的校验，你获得了我的实名制表扬！\n"
+fi
+exit $?
+
+exit $?;
+
