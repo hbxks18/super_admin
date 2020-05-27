@@ -24,6 +24,8 @@ import logo from "../../assets/logo.svg"
 const { Header, Content, Footer, Sider } = Layout
 const { createRoute, createMenu } = router
 
+const test = ""
+
 const LayoutExt = styled(Layout)`
   height: 100vh;
 `
