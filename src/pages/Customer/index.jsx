@@ -4,8 +4,7 @@ import { observer } from "mobx-react"
 import { Card, Button } from "antd"
 import styled from "styled-components"
 
-// import ErrorBoundary from "@/components/ErrorBoundary"
-
+import PageContent from "@/components/PageContent"
 import FunctionsAndSearchToolbar from "./module/FunctionsAndSearchToolbar"
 import DataTable from "./module/DataTable"
 import CreateAndEditModal from "./module/CreateAndEditModal"
@@ -13,21 +12,12 @@ import { MODAL_TYPE } from "./enum"
 
 @observer
 class Page extends Component {
-  componentDidMount() {
-    const { customer } = this.props
-    customer.load()
-  }
-  componentWillUnmount() {
-    const { customer } = this.props
-    customer.clear()
-  }
-
   render() {
-    const { customer, base } = this.props
-    const selectedRoute = base.getRouteBySelectedKeys
+    // TODO:感觉此处处理比较诡异。。。之后在想想
+    const { customer } = this.props
     return (
-      <Card
-        title={selectedRoute[selectedRoute.length - 1]?.name}
+      <PageContent
+        {...this.props}
         extra={
           <Button
             onClick={() =>
@@ -41,10 +31,10 @@ class Page extends Component {
           </Button>
         }
       >
-        <FunctionsAndSearchToolbar customer={customer} />
-        <DataTable customer={customer} />
-        <CreateAndEditModal customer={customer} />
-      </Card>
+        <FunctionsAndSearchToolbar />
+        <DataTable />
+        <CreateAndEditModal />
+      </PageContent>
     )
   }
 }

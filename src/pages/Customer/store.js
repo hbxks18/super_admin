@@ -4,14 +4,7 @@ import { loading } from "@/utils/decorator"
 import { MODAL_TYPE } from "./enum"
 import SuperStroe from "@/store/Super"
 
-const mockAjax = (params, res) =>
-  new Promise((resolve, reject) => {
-    console.log("【参数】", params)
-    setTimeout(() => {
-      console.log("【结果】", res)
-      resolve(res)
-    }, 3000)
-  })
+import api from "./services"
 
 /**
  * 当前页面的Store
@@ -25,42 +18,43 @@ class Store extends SuperStroe {
     page: 1,
     page_size: 10,
   }
+
   @observable query = {}
+
   @observable data = []
+
   @observable modalData = {
     visible: false,
     type: MODAL_TYPE.DEFINE.CREATE,
   }
-  @observable modalType = false
 
   @action.bound @loading async load() {
     const params = { ...this.query, ...this.pagination }
-    const res = await mockAjax(params, [
-      {
-        key: "1",
-        name: "John Brown",
-        age: 32,
-        address: "New York No. 1 Lake Park",
-        tags: ["nice", "developer"],
-      },
-      {
-        key: "2",
-        name: "Jim Green",
-        age: 42,
-        address: "London No. 1 Lake Park",
-        tags: ["loser"],
-      },
-      {
-        key: "3",
-        name: "Joe Black",
-        age: 32,
-        address: "Sidney No. 1 Lake Park",
-        tags: ["cool", "teacher"],
-      },
-    ])
-    runInAction(() => {
-      this.data = res
-    })
+    const res = await api.getDataList(params)
+    if (res.success) {
+      runInAction(() => {
+        this.data = res.data.list
+      })
+    } else {
+    }
+  }
+
+  @action.bound @loading async create(params, cb) {
+    const res = await api.postCreate(params)
+    if (res.success) {
+      runInAction(() => {
+        cb && cb()
+      })
+    }
+  }
+
+  @action.bound @loading async edit(params, cb) {
+    const res = await api.postEdit(params)
+    if (res.success) {
+      runInAction(() => {
+        cb && cb()
+      })
+    }
   }
 }
 

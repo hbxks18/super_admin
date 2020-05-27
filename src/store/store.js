@@ -18,6 +18,7 @@ class BaseStore extends SuperStroe {
   @observable currentSelectedKeys = [] // 当前菜单的选中项
 
   @computed get getRouteBySelectedKeys() {
+    // 当前path对应的菜单路由
     const routes = arrayTreeFilter(config, (item, level) => {
       if (this.currentSelectedKeys[level]) {
         return (
@@ -28,6 +29,12 @@ class BaseStore extends SuperStroe {
       return false
     })
     return routes
+  }
+
+  @computed get getCurrentPageTitle() {
+    // 当前页面的title
+    const selectedRoute = this.getRouteBySelectedKeys
+    return selectedRoute[selectedRoute.length - 1]?.name
   }
 
   @observable

@@ -1,7 +1,18 @@
 // @import '~antd/dist/antd.css';
 
-
-
 .active {
   color: red;
+}
+
+.modal-form {
+  .ant-form {
+    margin-bottom: 16px;
+    .ant-form-item-control-input-content {
+      /* 如果某些表单组件宽度需要撑满，可以在此添加上对应的类名 */
+      .ant-input-number,
+      .ant-picker {
+        width: 100%;
+      }
+    }
+  }
 }

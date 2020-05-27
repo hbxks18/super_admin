@@ -3,7 +3,6 @@ import {
   Form,
   Input,
   Button,
-  Radio,
   InputNumber,
   Select,
   Row,
@@ -43,6 +42,13 @@ const FunctionsAndSearchToolbar = props => {
   const { customer } = props
   const [form] = Form.useForm()
 
+  useEffect(() => {
+    customer.load()
+    return () => {
+      customer.clear()
+    }
+  }, [])
+
   const onFinish = values => {
     customer.setVal("query", values)
     customer.load()
@@ -54,6 +60,12 @@ const FunctionsAndSearchToolbar = props => {
     {
       label: "姓名",
       name: "name",
+      el: <Input placeholder="请输入" />,
+      otherProps: {},
+    },
+    {
+      label: "地址",
+      name: "address",
       el: <Input placeholder="请输入" />,
       otherProps: {},
     },
@@ -85,7 +97,7 @@ const FunctionsAndSearchToolbar = props => {
       otherProps: {},
     },
     {
-      label: "筛选的日期",
+      label: "筛选的时间",
       name: "filter_date",
       el: <RangePicker placeholder={["起始日期", "结束日期"]} />,
       otherProps: {},

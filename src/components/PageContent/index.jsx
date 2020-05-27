@@ -1,4 +1,5 @@
 import * as React from "react"
+import { Card, Button } from "antd"
 
 class PageContent extends React.Component {
   static getDerivedStateFromError() {
@@ -24,6 +25,9 @@ class PageContent extends React.Component {
   }
 
   render() {
+    const { title = "", extra = [], children, ...restProps } = this.props
+    const { base } = restProps
+
     if (this.state.hasError) {
       return (
         <div>
@@ -35,8 +39,16 @@ class PageContent extends React.Component {
         </div>
       )
     }
-
-    return this.props.children
+    return (
+      <Card title={title || base.getCurrentPageTitle} extra={extra}>
+        {React.Children.map(children, child =>
+          React.cloneElement(child, {
+            ...restProps,
+          })
+        )}
+      </Card>
+    )
+    // return this.props.children
   }
 }
 

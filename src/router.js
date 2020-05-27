@@ -95,6 +95,7 @@ const generateRoute = (config = [], path = "/", result = [], auth) => {
     if (!r.children || r.children.every(i => i.hide)) {
       let LoadableComponent = null
       if (r.auth !== true && !auth.includes(r.auth)) {
+        // TODO: 加载的时候是否排除掉无权限页面？ 还是 使用接口返回错误码跳转？
         LoadableComponent = () => (
           <Result
             status="403"

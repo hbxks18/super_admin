@@ -5,6 +5,8 @@ import { Table, Tag } from "antd"
 import styled from "styled-components"
 import { observer } from "mobx-react"
 
+import { GENDER } from "../enum"
+
 import { MODAL_TYPE } from "../enum"
 
 /**
@@ -23,43 +25,39 @@ const DataTable = props => {
   }
   const columns = [
     {
-      title: "Name",
+      title: "名字",
       dataIndex: "name",
       key: "name",
       render: text => <a>{text}</a>,
     },
     {
-      title: "Age",
+      title: "年龄",
       dataIndex: "age",
       key: "age",
     },
     {
-      title: "Address",
+      title: "性别",
+      key: "gender",
+      dataIndex: "gender",
+      render: gender => <Tag>{GENDER[gender]}</Tag>,
+    },
+    {
+      title: "地址",
       dataIndex: "address",
       key: "address",
     },
     {
-      title: "Tags",
-      key: "tags",
-      dataIndex: "tags",
-      render: tags => (
-        <span>
-          {tags.map(tag => {
-            let color = tag.length > 5 ? "geekblue" : "green"
-            if (tag === "loser") {
-              color = "volcano"
-            }
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            )
-          })}
-        </span>
-      ),
+      title: "出生日期",
+      dataIndex: "birth_date",
+      key: "birth_date",
     },
     {
-      title: "Action",
+      title: "筛选时间",
+      dataIndex: "filter_date",
+      key: "filter_date",
+    },
+    {
+      title: "操作",
       key: "action",
       render: (text, record) => (
         <span>
@@ -77,6 +75,7 @@ const DataTable = props => {
       loading={customer.loadLoading}
       columns={columns}
       dataSource={customer.data}
+      rowKey={record => record.name}
     />
   )
 }

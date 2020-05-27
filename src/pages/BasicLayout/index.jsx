@@ -145,7 +145,7 @@ class BasicLayout extends React.Component {
 
   render() {
     const { base } = this.props
-    console.log("xxx", base.getRouteBySelectedKeys)
+
     return (
       <LayoutExt>
         <Sider
@@ -179,19 +179,15 @@ class BasicLayout extends React.Component {
             </BreadContent>
             <Main>
               <Switch>
-                <Route
-                  exact
-                  path="/"
-                  render={props => <Redirect to="/Home" />}
-                />
+                <Route exact path="/" render={() => <Redirect to="/Home" />} />
                 {createRoute(config, base.auth)}
-                <Route exact path="/NoPower" component={NoPower} />
+                {/* <Route exact path="/NoPower" component={NoPower} /> */}
                 <Route component={NoFound} />
               </Switch>
             </Main>
           </ContentExt>
           <Footer style={{ textAlign: "center" }}>
-            Super Admin ©2020 Created by Hbx
+            Super Admin ©2020 Created by Nit
           </Footer>
         </Layout>
       </LayoutExt>
