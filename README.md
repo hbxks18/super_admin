@@ -107,7 +107,21 @@ pages
 plugins = [
   new AntdIcontfontWebpackPlugin({
     url: "http://at.alicdn.com/t/font_1813645_saetskfq0x.js",
-    scriptUrl: "/static/js/iconfont.js",
-  }),
+    scriptUrl: "/static/js/iconfont.js"
+  })
 ]
+```
+
+### 3.前端监控
+
+- 使用[sentry](https://sentry.io/)做为前端监控，对代码的侵入性极小，使用方法仅需在`App.js`里使用，dsn 地址需要到[sentry](https://sentry.io/)注册之后获取
+
+```js
+import * as Sentry from "@sentry/browser"
+
+process.env.NODE_ENV === "production" &&
+  Sentry.init({
+    dsn:
+      "https://8703dee7bb8b46c794ad0425aafa24d9@o393025.ingest.sentry.io/5241525"
+  })
 ```
