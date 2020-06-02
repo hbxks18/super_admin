@@ -1,6 +1,6 @@
-# 中后台管理系统（范例）
+# {{projectNameCn}}
 
-> Super Management System
+> {{repositoryName}} Management System
 
 ## ✨ 项目简介
 

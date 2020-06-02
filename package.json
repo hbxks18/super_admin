@@ -1,6 +1,6 @@
 {
-  "name": "super_admin",
-  "version": "0.1.0",
+  "name": "{{projectNameCn}}",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@babel/core": "7.9.0",
