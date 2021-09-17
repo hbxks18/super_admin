@@ -1,5 +1,5 @@
 const { createProxyMiddleware } = require("http-proxy-middleware")
-const easymock = ""
+const easymock = "http://localhost:3000/"
 
 const proxyConf = {
   "/api": easymock,
